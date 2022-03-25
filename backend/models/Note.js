@@ -17,6 +17,10 @@ const NoteSchema = new Schema({
     createdDate: {
         type: Date,
         default: Date.now
+    },
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'user'
     }
 });
 

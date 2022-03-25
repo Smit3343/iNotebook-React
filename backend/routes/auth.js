@@ -45,7 +45,7 @@ router.post('/createuser', [
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("some error occured!");
+        return res.status(500).send("Internal Server Error!");
     }
 })
 
@@ -81,11 +81,11 @@ router.post('/authenicateUser', [
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("some error occured!");
+        return res.status(500).send("Internal Server Error!");
     }
 })
 
-//ROUTE 3: Get Logged User using: POST "/api/auth/getuser". login Required
+//ROUTE 3: Get Logged User using: GET "/api/auth/getuser". login Required
 router.get('/getuser',fetchUser, async (req, res) => {
     try {
         let userId=req.user.id;
@@ -94,7 +94,7 @@ router.get('/getuser',fetchUser, async (req, res) => {
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("some error occured!");
+        return res.status(500).send("Internal Server Error!");
     }
 })
 
