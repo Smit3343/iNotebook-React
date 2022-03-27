@@ -7,8 +7,14 @@ const { body, validationResult } = require('express-validator');
 
 //ROUTE 1: Get All the Notes using: GET "/api/note/fetchAllNotes". login Required
 router.get('/fetchAllNotes', fetchUser, async (req, res) => {
-    const user = await Note.find({ user: req.user.id });
-    return res.status(200).json(user);
+    try{
+        const notes = await Note.find({ user: req.user.id });
+        return res.status(200).json(notes);
+    }
+    catch (error) {
+        console.log(error.message);
+        return res.status(500).json({error:"Internal Server Error!"});
+    }
 })
 
 //ROUTE 2: Add note using: POST "/api/note/addNote". login Required
@@ -29,11 +35,11 @@ router.post('/addNote', [
             tag: tag,
             user: req.user.id
         })
-        return res.status(200).json(note);
+        return res.status(200).json({"note":note});
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("Internal Server Error!");
+        return res.status(500).json({error:"Internal Server Error!"});
     }
 })
 
@@ -61,11 +67,11 @@ router.put('/updateNote/:id', fetchUser, async (req, res) => {
 
         note = await Note.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
 
-        return res.send(note);
+        return res.status.json({"note":note});
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("Internal Server Error!");
+        return res.status(500).json({error:"Internal Server Error!"});
     }
 })
 
@@ -86,7 +92,7 @@ router.delete('/deleteNote/:id', fetchUser, async (req, res) => {
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("Internal Server Error!");
+        return res.status(500).json({error:"Internal Server Error!"});
     }
 })
 

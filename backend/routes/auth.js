@@ -23,7 +23,7 @@ router.post('/createuser', [
         //check whether the user with this email already exists.
         let user = await User.findOne({ email: req.body.email });
         if (user != null) {
-            return res.status(400).json({ error: 'email already taken!' });
+            return res.status(400).json({ error: 'Email already registered!' });
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -41,11 +41,11 @@ router.post('/createuser', [
             }
         }
         var authToken = jwt.sign(data, JWT_SECRET);
-        return res.status(200).json({ "authToken": authToken });
+        return res.status(200).json({"authToken": authToken });
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("Internal Server Error!");
+        return res.status(500).json({error:"Internal Server Error!"});
     }
 })
 
@@ -64,11 +64,11 @@ router.post('/authenicateUser', [
         const { email, password } = req.body;
         const user = await User.findOne({ email: email })
         if (user == null) {
-            return res.status(400).json({ error: "email/password is not valid" });
+            return res.status(400).json({ error: "email or password is invalid" });
         }
         const comparePassword = await bcrypt.compare(password, user.password);
         if (!comparePassword) {
-            return res.status(400).json({ error: "email/password is not valid" });
+            return res.status(400).json({ error: "email or password is invalid" });
         }
 
         const data = {
@@ -81,7 +81,7 @@ router.post('/authenicateUser', [
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("Internal Server Error!");
+        return res.status(500).json({error:"Internal Server Error!"});
     }
 })
 
@@ -90,11 +90,11 @@ router.get('/getuser',fetchUser, async (req, res) => {
     try {
         let userId=req.user.id;
         const user=await User.findById(userId).select("-password");
-        return res.status(200).json(user);
+        return res.status(200).json({"user":user});
     }
     catch (error) {
         console.log(error.message);
-        return res.status(500).send("Internal Server Error!");
+        return res.status(500).json({error:"Internal Server Error!"});
     }
 })
 
